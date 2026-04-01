@@ -1286,132 +1286,86 @@
   }
 
   // ══════════════════════════════════
-  // OUTER SHIELD RING — decorative frame
+  // OUTER SHIELD RING
   // ══════════════════════════════════
   const shieldRing = new THREE.Group();
-
-  const outerTorus = new THREE.Mesh(
-    new THREE.TorusGeometry(1.72, 0.07, 20, 100), goldMat
-  );
+  const outerTorus = new THREE.Mesh(new THREE.TorusGeometry(1.72, 0.07, 20, 100), goldMat);
   shieldRing.add(outerTorus);
-
-  const midTorus = new THREE.Mesh(
-    new THREE.TorusGeometry(1.58, 0.04, 14, 100), purpleMat
-  );
+  const midTorus = new THREE.Mesh(new THREE.TorusGeometry(1.58, 0.04, 14, 100), purpleMat);
   shieldRing.add(midTorus);
-
-  // Decorative studs around the ring
   for (let i = 0; i < 12; i++) {
     const angle = (i / 12) * Math.PI * 2;
     const stud = sph(0.07, i % 2 === 0 ? goldMat : darkPurpleMat);
     stud.position.set(Math.cos(angle) * 1.72, Math.sin(angle) * 1.72, 0);
     shieldRing.add(stud);
   }
-
   master.add(shieldRing);
 
+  const tk = 0.11; // stroke thickness
+
   // ══════════════════════════════════
-  // Ω  OMEGA — top section
+  // T — gold, left
   // ══════════════════════════════════
-  const omegaG = new THREE.Group();
+  const TG = new THREE.Group();
+  // top crossbar
+  const tBar = cyl(tk, tk, 1.1, 14, goldMat);
+  tBar.rotation.z = Math.PI / 2;
+  tBar.position.set(0, 0.62, 0);
+  TG.add(tBar);
+  // vertical stem
+  const tStem = cyl(tk, tk, 1.3, 14, gold2Mat);
+  tStem.position.set(0, -0.02, 0);
+  TG.add(tStem);
+  // end caps on crossbar
+  [-0.55, 0.55].forEach(x => { const c = sph(tk, goldMat); c.position.set(x, 0.62, 0); TG.add(c); });
+  // bottom cap
+  const tBotCap = sph(tk, gold2Mat); tBotCap.position.set(0, -0.67, 0); TG.add(tBotCap);
+  TG.position.set(-0.72, 0, 0);
+  master.add(TG);
 
-  // Main horseshoe arc — ~240°
-  const omArc = arc(0.68, 0.095, Math.PI * 1.33, 72, goldMat);
-  omArc.rotation.z = -Math.PI * 0.665;
-  omegaG.add(omArc);
-
-  // Left descending leg
-  const lLeg = cyl(0.075, 0.075, 0.52, 14, gold2Mat);
-  lLeg.position.set(-0.52, -0.68, 0);
-  lLeg.rotation.z = Math.PI * 0.1;
-  omegaG.add(lLeg);
-
-  // Right descending leg
-  const rLeg = cyl(0.075, 0.075, 0.52, 14, gold2Mat);
-  rLeg.position.set(0.52, -0.68, 0);
-  rLeg.rotation.z = -Math.PI * 0.1;
-  omegaG.add(rLeg);
-
-  // Left foot bar
-  const lFoot = cyl(0.075, 0.075, 0.32, 12, goldMat);
-  lFoot.rotation.z = Math.PI / 2;
-  lFoot.position.set(-0.58, -0.92, 0);
-  omegaG.add(lFoot);
-
-  // Right foot bar
-  const rFoot = cyl(0.075, 0.075, 0.32, 12, goldMat);
-  rFoot.rotation.z = Math.PI / 2;
-  rFoot.position.set(0.58, -0.92, 0);
-  omegaG.add(rFoot);
-
-  // Foot end caps
-  [-0.74, 0.74].forEach(x => {
-    const cap = sph(0.09, goldMat);
-    cap.position.set(x, -0.92, 0);
-    omegaG.add(cap);
+  // ══════════════════════════════════
+  // B — purple, right
+  // ══════════════════════════════════
+  const BG = new THREE.Group();
+  // vertical spine
+  const bSpine = cyl(tk, tk, 1.3, 14, purpleMat);
+  bSpine.position.set(0, 0, 0);
+  BG.add(bSpine);
+  // top bump (half circle opening right)
+  const bArcTop = arc(0.28, tk * 0.88, Math.PI, 36, darkPurpleMat);
+  bArcTop.rotation.z = -Math.PI / 2;
+  bArcTop.position.set(0.28, 0.33, 0);
+  BG.add(bArcTop);
+  // bottom bump (slightly larger, opening right)
+  const bArcBot = arc(0.33, tk * 0.88, Math.PI, 36, purpleMat);
+  bArcBot.rotation.z = -Math.PI / 2;
+  bArcBot.position.set(0.28, -0.17, 0);
+  BG.add(bArcBot);
+  // horizontal serifs at top, mid, bottom connecting spine to bumps
+  [[0.14, 0.65], [0.14, 0.02], [0.165, -0.65]].forEach(([len, y], i) => {
+    const bar = cyl(tk * 0.8, tk * 0.8, len * 2, 12, i < 2 ? darkPurpleMat : purpleMat);
+    bar.rotation.z = Math.PI / 2;
+    bar.position.set(len, y, 0);
+    BG.add(bar);
   });
-
-  omegaG.position.set(0, 0.28, 0);
-  omegaG.scale.set(0.95, 0.95, 0.95);
-  master.add(omegaG);
-
-  // ══════════════════════════════════
-  // Ψ  PSI — center-bottom
-  // ══════════════════════════════════
-  const psiG = new THREE.Group();
-
-  // Vertical staff
-  const pStaff = cyl(0.062, 0.062, 1.3, 14, purpleMat);
-  psiG.add(pStaff);
-
-  // Center fork arc (opens upward)
-  const pArc = arc(0.32, 0.062, Math.PI, 36, darkPurpleMat);
-  pArc.rotation.z = Math.PI / 2;
-  pArc.position.set(0, 0.22, 0);
-  psiG.add(pArc);
-
-  // Left curved arm
-  const pLA = arc(0.28, 0.055, Math.PI * 0.55, 24, purpleMat);
-  pLA.rotation.z = Math.PI * 1.08;
-  pLA.position.set(-0.19, 0.12, 0);
-  psiG.add(pLA);
-
-  // Right curved arm
-  const pRA = arc(0.28, 0.055, Math.PI * 0.55, 24, purpleMat);
-  pRA.rotation.z = Math.PI * 0.43;
-  pRA.position.set(0.19, 0.12, 0);
-  psiG.add(pRA);
-
-  // Staff caps
-  const topCap = sph(0.09, darkPurpleMat);
-  topCap.position.set(0, 0.65, 0);
-  psiG.add(topCap);
-  const botCap = sph(0.075, darkPurpleMat);
-  botCap.position.set(0, -0.65, 0);
-  psiG.add(botCap);
-
-  psiG.position.set(0, -0.78, 0.05);
-  psiG.scale.set(0.78, 0.78, 0.78);
-  master.add(psiG);
+  // spine caps
+  const bTopCap = sph(tk, darkPurpleMat); bTopCap.position.set(0, 0.65, 0); BG.add(bTopCap);
+  const bBotCap = sph(tk, purpleMat);     bBotCap.position.set(0, -0.65, 0); BG.add(bBotCap);
+  BG.position.set(0.68, 0, 0);
+  master.add(BG);
 
   // ══════════════════════════════════
-  // Glowing center gem
+  // Centre dot separator (gold pulse)
   // ══════════════════════════════════
-  const gemMat = new THREE.MeshStandardMaterial({
-    color: 0x9B30FF, metalness: 0.5, roughness: 0,
-    emissive: 0x6600CC, emissiveIntensity: 1.2, transparent: true, opacity: 0.9
+  const dotMat = new THREE.MeshStandardMaterial({
+    color: 0xFFD700, emissive: 0xFFAA00, emissiveIntensity: 1.2, metalness: 0.8, roughness: 0.1
   });
-  const gem = sph(0.12, gemMat);
-  gem.position.set(0, -0.05, 0.1);
+  const gem = sph(0.09, dotMat);
   master.add(gem);
-
-  // Gem glow halo
   const haloMat = new THREE.MeshStandardMaterial({
-    color: 0xFFD700, emissive: 0xFFD700, emissiveIntensity: 0.8,
-    transparent: true, opacity: 0.15
+    color: 0xFFD700, emissive: 0xFFD700, emissiveIntensity: 1.0, transparent: true, opacity: 0.13
   });
-  const halo = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), haloMat);
-  halo.position.copy(gem.position);
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(0.19, 16, 16), haloMat);
   master.add(halo);
 
   // ══════════════════════════════════
