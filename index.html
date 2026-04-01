@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terrell Booker | Cybersecurity Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #4B0082;
+    --purple-mid: #6A0DAD;
+    --purple-light: #9B30FF;
+    --gold: #FFD700;
+    --gold-dark: #B8860B;
+    --gold-light: #FFED80;
+    --black: #0A0A0F;
+    --dark: #0F0A1A;
+    --card-bg: rgba(75,0,130,0.15);
+    --text: #F0E6FF;
+    --muted: #A090C0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.3;
+  }
+
+  /* ── NETFLIX INTRO ── */
+  #netflix-intro {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: introFade 0.8s ease 3.2s forwards;
+  }
+
+  @keyframes introFade {
+    to { opacity: 0; pointer-events: none; }
+  }
+
+  .netflix-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 12vw, 120px);
+    color: var(--purple-light);
+    letter-spacing: 4px;
+    text-shadow: 0 0 60px var(--purple-light), 0 0 120px var(--purple);
+    animation: netflixReveal 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+    position: relative;
+  }
+
+  .netflix-logo span {
+    color: var(--gold);
+    text-shadow: 0 0 60px var(--gold), 0 0 120px var(--gold-dark);
+  }
+
+  .netflix-bar {
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--purple-light), var(--gold));
+    animation: barExpand 1s ease 1.2s both;
+    box-shadow: 0 0 20px var(--gold);
+  }
+
+  @keyframes netflixReveal {
+    from { transform: scale(0.8); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  @keyframes barExpand {
+    from { width: 0; }
+    to   { width: 100%; }
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 0 6vw;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(106,13,173,0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,215,0,0.08) 0%, transparent 60%),
+                linear-gradient(180deg, #0A0A0F 0%, #0F0A1A 100%);
+  }
+
+  /* Animated grid lines */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(155,48,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(155,48,255,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridScroll 20s linear infinite;
+  }
+
+  @keyframes gridScroll {
+    from { transform: translateY(0); }
+    to   { transform: translateY(60px); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    opacity: 0;
+    animation: heroReveal 1s ease 3.8s forwards;
+  }
+
+  @keyframes heroReveal {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+  }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 10vw, 110px);
+    line-height: 0.9;
+    color: #fff;
+    text-shadow: 0 0 80px rgba(155,48,255,0.5);
+    margin-bottom: 8px;
+  }
+
+  .hero-name .gold { color: var(--gold); text-shadow: 0 0 40px var(--gold); }
+
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(20px, 3.5vw, 34px);
+    font-weight: 300;
+    color: var(--purple-light);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .hero-desc {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    padding: 14px 36px;
+    background: linear-gradient(135deg, var(--purple-light), var(--purple));
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: all 0.3s;
+    box-shadow: 0 0 30px rgba(155,48,255,0.4);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #000;
+    box-shadow: 0 0 40px rgba(255,215,0,0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    padding: 13px 35px;
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 2px solid var(--gold);
+    cursor: pointer;
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: all 0.3s;
+  }
+
+  .btn-outline:hover {
+    background: var(--gold);
+    color: #000;
+    box-shadow: 0 0 30px rgba(255,215,0,0.4);
+    transform: translateY(-2px);
+  }
+
+  /* ── 3D OMEGA PSI PHI FLOAT ── */
+  #omega-container {
+    position: absolute;
+    right: 6vw;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(380px, 40vw);
+    aspect-ratio: 1;
+    z-index: 3;
+    opacity: 0;
+    animation: omegaReveal 1.5s ease 4.2s forwards;
+  }
+
+  @keyframes omegaReveal {
+    from { opacity: 0; transform: translateY(-50%) scale(0.6); }
+    to   { opacity: 1; transform: translateY(-50%) scale(1); }
+  }
+
+  #omega-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 20px 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, rgba(10,10,15,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    animation: navFade 0.5s ease 4s forwards;
+  }
+
+  @keyframes navFade {
+    to { opacity: 1; }
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: width 0.3s;
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 100px 6vw;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 30px;
+    height: 2px;
+    background: var(--gold);
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 0.95;
+    margin-bottom: 60px;
+    color: #fff;
+  }
+
+  .section-title .accent { color: var(--purple-light); }
+
+  /* ── ABOUT ── */
+  #about {
+    background: linear-gradient(180deg, #0A0A0F 0%, #0D0817 100%);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .about-text p {
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(155,48,255,0.2);
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--purple-light), var(--gold));
+  }
+
+  .stat-card:hover {
+    border-color: rgba(255,215,0,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(75,0,130,0.3);
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── SKILLS ── */
+  #skills {
+    background: #0A0A0F;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .skill-category {
+    background: var(--card-bg);
+    border: 1px solid rgba(155,48,255,0.15);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+  }
+
+  .skill-category::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple-light), var(--gold));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s;
+  }
+
+  .skill-category:hover {
+    border-color: rgba(155,48,255,0.5);
+    transform: translateY(-6px);
+    box-shadow: 0 24px 48px rgba(75,0,130,0.25);
+  }
+
+  .skill-category:hover::after { transform: scaleX(1); }
+
+  .skill-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 12px var(--gold));
+  }
+
+  .skill-cat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    background: rgba(155,48,255,0.15);
+    border: 1px solid rgba(155,48,255,0.3);
+    color: var(--purple-light);
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .skill-tag:hover {
+    background: rgba(255,215,0,0.1);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience {
+    background: linear-gradient(180deg, #0A0A0F 0%, #0D0817 100%);
+  }
+
+  .exp-timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--purple-light), var(--gold), transparent);
+  }
+
+  .exp-item {
+    position: relative;
+    margin-bottom: 60px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .exp-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .exp-item::before {
+    content: '';
+    position: absolute;
+    left: -46px; top: 6px;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--gold), 0 0 40px rgba(255,215,0,0.5);
+  }
+
+  .exp-date {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .exp-role {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .exp-company {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--purple-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .exp-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .exp-bullets li {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .exp-bullets li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    color: var(--purple-light);
+    font-size: 10px;
+    top: 4px;
+  }
+
+  /* ── PROJECTS ── */
+  #projects {
+    background: #0A0A0F;
+  }
+
+  .projects-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 28px;
+  }
+
+  .project-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(155,48,255,0.15);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .project-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .project-card:nth-child(1) { transition-delay: 0s; }
+  .project-card:nth-child(2) { transition-delay: 0.1s; }
+  .project-card:nth-child(3) { transition-delay: 0.2s; }
+
+  .project-card:hover {
+    border-color: rgba(255,215,0,0.4);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 30px 60px rgba(75,0,130,0.4), 0 0 0 1px rgba(255,215,0,0.2);
+  }
+
+  .project-header {
+    padding: 32px;
+    border-bottom: 1px solid rgba(155,48,255,0.1);
+    position: relative;
+  }
+
+  .project-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    color: rgba(155,48,255,0.08);
+    position: absolute;
+    top: 10px; right: 20px;
+    line-height: 1;
+  }
+
+  .project-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    background: rgba(255,215,0,0.1);
+    border: 1px solid rgba(255,215,0,0.3);
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .project-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .project-body {
+    padding: 24px 32px 32px;
+  }
+
+  .project-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tech-chip {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    background: rgba(75,0,130,0.3);
+    border: 1px solid rgba(155,48,255,0.3);
+    color: var(--purple-light);
+  }
+
+  /* ── LEADERSHIP ── */
+  #leadership {
+    background: linear-gradient(180deg, #0A0A0F 0%, #0D0817 100%);
+  }
+
+  .leadership-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .lead-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(155,48,255,0.15);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .lead-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(255,215,0,0.05) 50%);
+  }
+
+  .lead-card:hover {
+    border-color: rgba(255,215,0,0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(75,0,130,0.2);
+  }
+
+  .lead-icon { font-size: 28px; margin-bottom: 12px; }
+
+  .lead-role {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .lead-org {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--purple-light);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .lead-year {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: #0A0A0F;
+    text-align: center;
+    padding: 120px 6vw;
+  }
+
+  .contact-glow {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 90px);
+    color: #fff;
+    margin-bottom: 24px;
+    text-shadow: 0 0 60px rgba(155,48,255,0.4);
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .contact-link {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 12px 24px;
+    border: 1px solid rgba(155,48,255,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+  }
+
+  .contact-link:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+    background: rgba(255,215,0,0.05);
+    box-shadow: 0 0 20px rgba(255,215,0,0.2);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(155,48,255,0.15);
+    padding: 40px 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0A0A0F;
+  }
+
+  footer p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .footer-omega {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px var(--gold);
+  }
+
+  /* ── SCROLL REVEAL BASE ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SCANLINE on hover ── */
+  .section-title:hover {
+    text-shadow: 0 0 40px rgba(155,48,255,0.5);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    #omega-container { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NETFLIX INTRO -->
+<div id="netflix-intro">
+  <div class="netflix-logo">
+    TB<span>SEC</span>
+    <div class="netflix-bar"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">TB // SEC</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Cybersecurity Portfolio</div>
+    <h1 class="hero-name">
+      Terrell<br><span class="gold">Booker</span>
+    </h1>
+    <div class="hero-title">Cybersecurity Analyst & Cloud Security Engineer</div>
+    <p class="hero-desc">
+      Computer Science scholar at Mississippi Valley State University with hands-on experience in Cyber Threat Intelligence, Incident Response, Cloud Security, and AI Security. Building the next line of digital defense.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Contact Me</a>
+    </div>
+  </div>
+
+  <!-- 3D Omega Psi Phi -->
+  <div id="omega-container">
+    <canvas id="omega-canvas"></canvas>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">Origin Story</div>
+  <h2 class="section-title">About <span class="accent">Me</span></h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        I'm Terrell Booker — a Cybersecurity-focused Computer Science student at Mississippi Valley State University (Itta Bena, MS), maintaining a 3.3 GPA on track to graduate May 2027. I'm a proud member of <strong style="color:var(--gold)">Omega Psi Phi Fraternity</strong>, a leader in my university community, and a driven future cybersecurity professional.
+      </p>
+      <p>
+        Through rigorous rotations at Booz Allen Hamilton, I've worked in Cyber Threat Intelligence, Incident Response, Operational Technology security, and AI analytics — building a comprehensive view of the modern threat landscape.
+      </p>
+      <p>
+        My mission: leverage cloud-native tools, threat intelligence frameworks, and automation to protect enterprise environments from the threats of tomorrow.
+      </p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat-card">
+        <div class="stat-num">3.3</div>
+        <div class="stat-label">GPA / 4.0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">4+</div>
+        <div class="stat-label">Security Domains</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">AWS</div>
+        <div class="stat-label">Cloud Platform</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2027</div>
+        <div class="stat-label">Graduation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">Arsenal</div>
+  <h2 class="section-title">Technical <span class="accent">Skills</span></h2>
+  <div class="skills-grid">
+    <div class="skill-category reveal">
+      <div class="skill-icon">🔐</div>
+      <div class="skill-cat-title">Cybersecurity</div>
+      <div class="skill-tags">
+        <span class="skill-tag">MITRE ATT&CK</span>
+        <span class="skill-tag">OSINT</span>
+        <span class="skill-tag">Incident Response</span>
+        <span class="skill-tag">SOC Operations</span>
+        <span class="skill-tag">Threat Detection</span>
+        <span class="skill-tag">DFIR</span>
+        <span class="skill-tag">Dark Web Ops</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-icon">☁️</div>
+      <div class="skill-cat-title">Cloud & Platforms</div>
+      <div class="skill-tags">
+        <span class="skill-tag">AWS Lambda</span>
+        <span class="skill-tag">IAM</span>
+        <span class="skill-tag">Athena</span>
+        <span class="skill-tag">Parameter Store</span>
+        <span class="skill-tag">Armis</span>
+        <span class="skill-tag">OT Security</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-icon">💻</div>
+      <div class="skill-cat-title">Languages & Tools</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">C++</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">SQL</span>
+        <span class="skill-tag">HTML/CSS</span>
+        <span class="skill-tag">Power BI</span>
+        <span class="skill-tag">Excel</span>
+      </div>
+    </div>
+    <div class="skill-category reveal">
+      <div class="skill-icon">🤖</div>
+      <div class="skill-cat-title">AI & Analytics</div>
+      <div class="skill-tags">
+        <span class="skill-tag">AI Red Teaming</span>
+        <span class="skill-tag">ML Concepts</span>
+        <span class="skill-tag">Power BI Dashboards</span>
+        <span class="skill-tag">AI Policy Dev</span>
+        <span class="skill-tag">Log Analysis</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">Ops Log</div>
+  <h2 class="section-title">Work <span class="accent">Experience</span></h2>
+  <div class="exp-timeline">
+
+    <div class="exp-item">
+      <div class="exp-date">MAY 2025 — AUG 2025</div>
+      <div class="exp-role">Cyber Security Analyst</div>
+      <div class="exp-company">Booz Allen Hamilton</div>
+      <ul class="exp-bullets">
+        <li>Conducted OSINT investigations, navigated the dark web with proper operational security, and applied MITRE ATT&CK framework to threat mapping in the CTI rotation.</li>
+        <li>Converted parsed forensic artifacts into Excel logs, analyzed key events, and reconstructed full incident timelines in a structured IR workbook.</li>
+        <li>Leveraged Armis to scan OT environments, identified critical vulnerabilities, and delivered prioritized threat reports.</li>
+        <li>Red-teamed AI models, developed AI-related cybersecurity policies, and built Power BI dashboards to transform raw logs into executive-ready insights.</li>
+        <li>Designed and deployed a cloud-native Incident Response solution in AWS using Lambda, IAM, Athena, and Parameter Store with automated user whitelisting.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item">
+      <div class="exp-date">JAN 2021 — PRESENT</div>
+      <div class="exp-role">Executive Assistant</div>
+      <div class="exp-company">TNB Professional Services · Memphis, TN</div>
+      <ul class="exp-bullets">
+        <li>Managed appointment scheduling, data entry, and organizational record-keeping.</li>
+        <li>Implemented a new digital filing system, improving operational efficiency and data retrieval processes.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Field Ops</div>
+  <h2 class="section-title">Key <span class="accent">Projects</span></h2>
+  <div class="projects-row">
+
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">01</div>
+        <div class="project-badge">Cloud Security</div>
+        <div class="project-title">AWS Automated Incident Response</div>
+      </div>
+      <div class="project-body">
+        <p class="project-desc">Engineered a fully cloud-native IR solution leveraging AWS Lambda, IAM, Parameter Store, and Athena. Built automated whitelisting logic to eliminate false-positive alerts and streamline analyst workflows.</p>
+        <div class="project-tech">
+          <span class="tech-chip">AWS Lambda</span>
+          <span class="tech-chip">Python</span>
+          <span class="tech-chip">IAM</span>
+          <span class="tech-chip">Athena</span>
+          <span class="tech-chip">Automation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">02</div>
+        <div class="project-badge">Threat Intelligence</div>
+        <div class="project-title">CTI & OSINT Investigations</div>
+      </div>
+      <div class="project-body">
+        <p class="project-desc">Executed real-world cyber threat intelligence operations including dark web navigation, threat actor profiling, and MITRE ATT&CK framework mapping to produce actionable intelligence reports.</p>
+        <div class="project-tech">
+          <span class="tech-chip">MITRE ATT&CK</span>
+          <span class="tech-chip">OSINT</span>
+          <span class="tech-chip">Dark Web</span>
+          <span class="tech-chip">Threat Mapping</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">03</div>
+        <div class="project-badge">AI Security</div>
+        <div class="project-title">AI Red Teaming & Policy</div>
+      </div>
+      <div class="project-body">
+        <p class="project-desc">Adversarially tested production AI models to identify vulnerabilities and failure modes. Developed organizational AI cybersecurity policies and built Power BI dashboards converting raw security logs into decision-ready insights.</p>
+        <div class="project-tech">
+          <span class="tech-chip">AI Red Teaming</span>
+          <span class="tech-chip">Power BI</span>
+          <span class="tech-chip">Policy Dev</span>
+          <span class="tech-chip">Analytics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">04</div>
+        <div class="project-badge">SOC Lab</div>
+        <div class="project-title">Security Operations Center Exercises</div>
+      </div>
+      <div class="project-body">
+        <p class="project-desc">Participated in hands-on SOC lab environments for threat detection, log analysis, and incident simulation guided by industry professionals — building real-world response muscle memory.</p>
+        <div class="project-tech">
+          <span class="tech-chip">SOC</span>
+          <span class="tech-chip">Log Analysis</span>
+          <span class="tech-chip">Threat Detection</span>
+          <span class="tech-chip">DFIR</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">05</div>
+        <div class="project-badge">OT Security</div>
+        <div class="project-title">Operational Technology Vulnerability Scan</div>
+      </div>
+      <div class="project-body">
+        <p class="project-desc">Used Armis to perform comprehensive OT environment scanning, identified critical infrastructure vulnerabilities, and produced prioritized threat reports for security leadership.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Armis</span>
+          <span class="tech-chip">OT Security</span>
+          <span class="tech-chip">Vulnerability Mgmt</span>
+          <span class="tech-chip">Reporting</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-num">06</div>
+        <div class="project-badge">Machine Learning</div>
+        <div class="project-title">ML Applications in Cybersecurity</div>
+      </div>
+      <div class="project-body">
+        <p class="project-desc">Explored artificial intelligence learning models and their practical applications in cybersecurity — anomaly detection, behavioral analysis, and automated threat classification.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Machine Learning</span>
+          <span class="tech-chip">AI Security</span>
+          <span class="tech-chip">Anomaly Detection</span>
+          <span class="tech-chip">Research</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="section-label">Command Structure</div>
+  <h2 class="section-title">Leadership & <span class="accent">Activities</span></h2>
+  <div class="leadership-grid">
+    <div class="lead-card reveal">
+      <div class="lead-icon">🏛️</div>
+      <div class="lead-role">SGA Representative</div>
+      <div class="lead-org">Math & Computer Information Sciences — MVSU</div>
+      <div class="lead-year">2024 — Present</div>
+    </div>
+    <div class="lead-card reveal">
+      <div class="lead-icon">⚙️</div>
+      <div class="lead-role">Secretary</div>
+      <div class="lead-org">National Society of Black Engineers (NSBE)</div>
+      <div class="lead-year">2024 — Present</div>
+    </div>
+    <div class="lead-card reveal">
+      <div class="lead-icon">🔬</div>
+      <div class="lead-role">Member</div>
+      <div class="lead-org">Louis Stokes Mississippi Alliance for Minority Participation</div>
+      <div class="lead-year">2024 — Present</div>
+    </div>
+    <div class="lead-card reveal">
+      <div class="lead-icon">🎓</div>
+      <div class="lead-role">Strada Scholar</div>
+      <div class="lead-org">Strada Education Foundation</div>
+      <div class="lead-year">2024 — Present</div>
+    </div>
+    <div class="lead-card reveal" style="border-color:rgba(255,215,0,0.3); background: rgba(255,215,0,0.04);">
+      <div class="lead-icon">🐾</div>
+      <div class="lead-role">Brother</div>
+      <div class="lead-org">Omega Psi Phi Fraternity, Inc.</div>
+      <div class="lead-year" style="color:var(--gold);">Que Dog for Life</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Open Channel</div>
+  <div class="contact-glow reveal">Let's <span style="color:var(--purple-light)">Connect</span></div>
+  <p style="font-size:18px; font-weight:300; color:var(--muted); max-width:500px; margin:0 auto; line-height:1.7;" class="reveal">
+    Looking for internships, research opportunities, and full-time roles in cybersecurity. Let's build something secure together.
+  </p>
+  <div class="contact-links reveal">
+    <a href="mailto:terrellbooker2004@icloud.com" class="contact-link">
+      <span>📧</span> terrellbooker2004@icloud.com
+    </a>
+    <a href="tel:9016597581" class="contact-link">
+      <span>📱</span> (901) 659-7581
+    </a>
+    <a href="https://linkedin.com/in/terrell-booker-002157303/" target="_blank" class="contact-link">
+      <span>🔗</span> LinkedIn
+    </a>
+    <a href="#" class="contact-link">
+      <span>📍</span> Memphis, TN / Itta Bena, MS
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Terrell Booker · MVSU Computer Science · Cybersecurity Focus</p>
+  <div class="footer-omega">ΩΨΦ</div>
+  <p>Built with passion & purple gold.</p>
+</footer>
+
+<!-- THREE.JS 3D OMEGA PSI PHI -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── 3D Omega Psi Phi Scene ──
+(function() {
+  const canvas = document.getElementById('omega-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.z = 5;
+
+  // Size to container
+  function resize() {
+    const w = canvas.parentElement.clientWidth;
+    renderer.setSize(w, w);
+    camera.aspect = 1;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Lights
+  const ambient = new THREE.AmbientLight(0x4B0082, 0.8);
+  scene.add(ambient);
+
+  const gold_light = new THREE.PointLight(0xFFD700, 3, 12);
+  gold_light.position.set(2, 3, 3);
+  scene.add(gold_light);
+
+  const purple_light = new THREE.PointLight(0x9B30FF, 2, 10);
+  purple_light.position.set(-3, -2, 2);
+  scene.add(purple_light);
+
+  const white_light = new THREE.PointLight(0xffffff, 1, 8);
+  white_light.position.set(0, 4, 2);
+  scene.add(white_light);
+
+  // Materials
+  const goldMat = new THREE.MeshStandardMaterial({
+    color: 0xFFD700,
+    metalness: 0.9,
+    roughness: 0.15,
+    emissive: 0x3A2000,
+    emissiveIntensity: 0.3
+  });
+
+  const purpleMat = new THREE.MeshStandardMaterial({
+    color: 0x6A0DAD,
+    metalness: 0.85,
+    roughness: 0.2,
+    emissive: 0x1A0035,
+    emissiveIntensity: 0.4
+  });
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // Helper: torus ring (for Ω top arc)
+  function makeArc(radius, tube, arc, segments, mat) {
+    const geo = new THREE.TorusGeometry(radius, tube, 16, segments, arc);
+    return new THREE.Mesh(geo, mat);
+  }
+
+  // ── OMEGA (Ω) symbol ──
+  const omegaGroup = new THREE.Group();
+
+  // Top arc ~270°
+  const topArc = makeArc(0.72, 0.08, Math.PI * 1.5, 64, goldMat);
+  topArc.rotation.z = -Math.PI * 0.75;
+  omegaGroup.add(topArc);
+
+  // Left leg
+  const leftLeg = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.07, 0.55, 12),
+    goldMat
+  );
+  leftLeg.position.set(-0.58, -0.72, 0);
+  leftLeg.rotation.z = Math.PI * 0.08;
+  omegaGroup.add(leftLeg);
+
+  // Right leg
+  const rightLeg = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.07, 0.55, 12),
+    goldMat
+  );
+  rightLeg.position.set(0.58, -0.72, 0);
+  rightLeg.rotation.z = -Math.PI * 0.08;
+  omegaGroup.add(rightLeg);
+
+  // Left foot
+  const leftFoot = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.07, 0.35, 12),
+    goldMat
+  );
+  leftFoot.rotation.z = Math.PI / 2;
+  leftFoot.position.set(-0.66, -0.98, 0);
+  omegaGroup.add(leftFoot);
+
+  // Right foot
+  const rightFoot = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.07, 0.07, 0.35, 12),
+    goldMat
+  );
+  rightFoot.rotation.z = Math.PI / 2;
+  rightFoot.position.set(0.66, -0.98, 0);
+  omegaGroup.add(rightFoot);
+
+  omegaGroup.position.set(0, 0.25, 0);
+  group.add(omegaGroup);
+
+  // ── PSI (Ψ) symbol ──
+  const psiGroup = new THREE.Group();
+
+  // Vertical staff
+  const staff = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.065, 0.065, 1.5, 12),
+    purpleMat
+  );
+  psiGroup.add(staff);
+
+  // Center arc
+  const psiArc = makeArc(0.35, 0.065, Math.PI, 32, purpleMat);
+  psiArc.rotation.z = Math.PI / 2;
+  psiArc.position.set(0, 0.18, 0);
+  psiGroup.add(psiArc);
+
+  // Left arm
+  const leftArm = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.055, 0.055, 0.65, 12),
+    purpleMat
+  );
+  leftArm.rotation.z = Math.PI * 0.28;
+  leftArm.position.set(-0.22, 0.08, 0);
+  psiGroup.add(leftArm);
+
+  // Right arm
+  const rightArm = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.055, 0.055, 0.65, 12),
+    purpleMat
+  );
+  rightArm.rotation.z = -Math.PI * 0.28;
+  rightArm.position.set(0.22, 0.08, 0);
+  psiGroup.add(rightArm);
+
+  psiGroup.position.set(0, -0.85, 0.04);
+  psiGroup.scale.set(0.72, 0.72, 0.72);
+  group.add(psiGroup);
+
+  // ── PHI (Φ) symbol ring ──
+  const phiGroup = new THREE.Group();
+
+  // Outer ring
+  const outerRing = new THREE.Mesh(
+    new THREE.TorusGeometry(1.55, 0.065, 16, 80),
+    new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.9, roughness: 0.1, emissive: 0x2A1000, emissiveIntensity: 0.3 })
+  );
+  phiGroup.add(outerRing);
+
+  // Inner decorative ring
+  const innerRing = new THREE.Mesh(
+    new THREE.TorusGeometry(1.35, 0.03, 12, 80),
+    new THREE.MeshStandardMaterial({ color: 0x9B30FF, metalness: 0.7, roughness: 0.2, emissive: 0x1A0035, emissiveIntensity: 0.5 })
+  );
+  phiGroup.add(innerRing);
+
+  group.add(phiGroup);
+
+  // ── Floating particles ──
+  const particleGeo = new THREE.BufferGeometry();
+  const pCount = 120;
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount * 3; i++) {
+    pPos[i] = (Math.random() - 0.5) * 5;
+  }
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const particleMat = new THREE.PointsMaterial({
+    color: 0xFFD700,
+    size: 0.025,
+    transparent: true,
+    opacity: 0.6
+  });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  // Animation
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.008;
+
+    // Slow majestic rotation
+    group.rotation.y = t * 0.4;
+    group.rotation.x = Math.sin(t * 0.3) * 0.15;
+
+    // Gentle float
+    group.position.y = Math.sin(t * 0.6) * 0.08;
+
+    // Gold light orbit
+    gold_light.position.x = Math.cos(t * 0.7) * 3;
+    gold_light.position.y = Math.sin(t * 0.5) * 2;
+
+    // Particles slow rotate
+    particles.rotation.y = t * 0.05;
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ── Scroll reveal ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal, .exp-item, .project-card').forEach(el => observer.observe(el));
+
+// ── Netflix-style row hover effect ──
+document.querySelectorAll('.project-card').forEach((card, i, all) => {
+  card.addEventListener('mouseenter', () => {
+    all.forEach((c, j) => {
+      if (c !== card) {
+        c.style.opacity = '0.5';
+        c.style.transform = 'scale(0.97)';
+      }
+    });
+  });
+  card.addEventListener('mouseleave', () => {
+    all.forEach(c => {
+      c.style.opacity = '';
+      c.style.transform = '';
+    });
+  });
+});
+</script>
+</body>
+</html>
