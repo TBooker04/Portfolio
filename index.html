@@ -1174,7 +1174,7 @@
       <div class="lead-icon">🐾</div>
       <div class="lead-role">Brother</div>
       <div class="lead-org">Omega Psi Phi Fraternity, Inc.</div>
-      <div class="lead-year" style="color:var(--gold);">Que Dog for Life</div>
+      <div class="lead-year" style="color:var(--gold);">Vice Basileus</div>
     </div>
   </div>
 </section>
@@ -1212,17 +1212,17 @@
 <!-- THREE.JS 3D OMEGA PSI PHI -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ── 3D Omega Psi Phi Scene ──
+// ── 3D Omega Psi Phi — Full Continuous Spin ──
 (function() {
   const canvas = document.getElementById('omega-canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.shadowMap.enabled = true;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  camera.position.z = 5;
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.z = 5.8;
 
-  // Size to container
   function resize() {
     const w = canvas.parentElement.clientWidth;
     renderer.setSize(w, w);
@@ -1232,188 +1232,263 @@
   resize();
   window.addEventListener('resize', resize);
 
-  // Lights
-  const ambient = new THREE.AmbientLight(0x4B0082, 0.8);
-  scene.add(ambient);
+  // ── LIGHTS ──
+  scene.add(new THREE.AmbientLight(0x220033, 1.2));
 
-  const gold_light = new THREE.PointLight(0xFFD700, 3, 12);
-  gold_light.position.set(2, 3, 3);
-  scene.add(gold_light);
+  const goldKey = new THREE.PointLight(0xFFD700, 5, 14);
+  goldKey.position.set(3, 3, 4);
+  scene.add(goldKey);
 
-  const purple_light = new THREE.PointLight(0x9B30FF, 2, 10);
-  purple_light.position.set(-3, -2, 2);
-  scene.add(purple_light);
+  const purpleFill = new THREE.PointLight(0x9B30FF, 3, 10);
+  purpleFill.position.set(-4, -2, 3);
+  scene.add(purpleFill);
 
-  const white_light = new THREE.PointLight(0xffffff, 1, 8);
-  white_light.position.set(0, 4, 2);
-  scene.add(white_light);
+  const rimLight = new THREE.PointLight(0xffffff, 2, 8);
+  rimLight.position.set(0, -4, -2);
+  scene.add(rimLight);
 
-  // Materials
+  const backGold = new THREE.PointLight(0xFFAA00, 2, 10);
+  backGold.position.set(-2, 2, -3);
+  scene.add(backGold);
+
+  // ── MATERIALS ──
   const goldMat = new THREE.MeshStandardMaterial({
-    color: 0xFFD700,
-    metalness: 0.9,
-    roughness: 0.15,
-    emissive: 0x3A2000,
-    emissiveIntensity: 0.3
+    color: 0xFFD700, metalness: 0.95, roughness: 0.08,
+    emissive: 0x6A3800, emissiveIntensity: 0.25
   });
-
+  const gold2Mat = new THREE.MeshStandardMaterial({
+    color: 0xFFCC00, metalness: 0.9, roughness: 0.12,
+    emissive: 0x442200, emissiveIntensity: 0.2
+  });
   const purpleMat = new THREE.MeshStandardMaterial({
-    color: 0x6A0DAD,
-    metalness: 0.85,
-    roughness: 0.2,
-    emissive: 0x1A0035,
-    emissiveIntensity: 0.4
+    color: 0x7B10DD, metalness: 0.88, roughness: 0.15,
+    emissive: 0x280050, emissiveIntensity: 0.45
+  });
+  const darkPurpleMat = new THREE.MeshStandardMaterial({
+    color: 0x4B0082, metalness: 0.85, roughness: 0.2,
+    emissive: 0x1A0035, emissiveIntensity: 0.3
   });
 
-  const group = new THREE.Group();
-  scene.add(group);
+  // ── MASTER GROUP — this spins continuously ──
+  const master = new THREE.Group();
+  scene.add(master);
 
-  // Helper: torus ring (for Ω top arc)
-  function makeArc(radius, tube, arc, segments, mat) {
-    const geo = new THREE.TorusGeometry(radius, tube, 16, segments, arc);
+  // Helper
+  function arc(radius, tube, angle, segs, mat) {
+    const geo = new THREE.TorusGeometry(radius, tube, 18, segs, angle);
     return new THREE.Mesh(geo, mat);
   }
+  function cyl(rt, rb, h, segs, mat) {
+    return new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, segs), mat);
+  }
+  function sph(r, mat) {
+    return new THREE.Mesh(new THREE.SphereGeometry(r, 16, 16), mat);
+  }
 
-  // ── OMEGA (Ω) symbol ──
-  const omegaGroup = new THREE.Group();
+  // ══════════════════════════════════
+  // OUTER SHIELD RING — decorative frame
+  // ══════════════════════════════════
+  const shieldRing = new THREE.Group();
 
-  // Top arc ~270°
-  const topArc = makeArc(0.72, 0.08, Math.PI * 1.5, 64, goldMat);
-  topArc.rotation.z = -Math.PI * 0.75;
-  omegaGroup.add(topArc);
-
-  // Left leg
-  const leftLeg = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.07, 0.07, 0.55, 12),
-    goldMat
+  const outerTorus = new THREE.Mesh(
+    new THREE.TorusGeometry(1.72, 0.07, 20, 100), goldMat
   );
-  leftLeg.position.set(-0.58, -0.72, 0);
-  leftLeg.rotation.z = Math.PI * 0.08;
-  omegaGroup.add(leftLeg);
+  shieldRing.add(outerTorus);
 
-  // Right leg
-  const rightLeg = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.07, 0.07, 0.55, 12),
-    goldMat
+  const midTorus = new THREE.Mesh(
+    new THREE.TorusGeometry(1.58, 0.04, 14, 100), purpleMat
   );
-  rightLeg.position.set(0.58, -0.72, 0);
-  rightLeg.rotation.z = -Math.PI * 0.08;
-  omegaGroup.add(rightLeg);
+  shieldRing.add(midTorus);
 
-  // Left foot
-  const leftFoot = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.07, 0.07, 0.35, 12),
-    goldMat
-  );
-  leftFoot.rotation.z = Math.PI / 2;
-  leftFoot.position.set(-0.66, -0.98, 0);
-  omegaGroup.add(leftFoot);
+  // Decorative studs around the ring
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const stud = sph(0.07, i % 2 === 0 ? goldMat : darkPurpleMat);
+    stud.position.set(Math.cos(angle) * 1.72, Math.sin(angle) * 1.72, 0);
+    shieldRing.add(stud);
+  }
 
-  // Right foot
-  const rightFoot = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.07, 0.07, 0.35, 12),
-    goldMat
-  );
-  rightFoot.rotation.z = Math.PI / 2;
-  rightFoot.position.set(0.66, -0.98, 0);
-  omegaGroup.add(rightFoot);
+  master.add(shieldRing);
 
-  omegaGroup.position.set(0, 0.25, 0);
-  group.add(omegaGroup);
+  // ══════════════════════════════════
+  // Ω  OMEGA — top section
+  // ══════════════════════════════════
+  const omegaG = new THREE.Group();
 
-  // ── PSI (Ψ) symbol ──
-  const psiGroup = new THREE.Group();
+  // Main horseshoe arc — ~240°
+  const omArc = arc(0.68, 0.095, Math.PI * 1.33, 72, goldMat);
+  omArc.rotation.z = -Math.PI * 0.665;
+  omegaG.add(omArc);
+
+  // Left descending leg
+  const lLeg = cyl(0.075, 0.075, 0.52, 14, gold2Mat);
+  lLeg.position.set(-0.52, -0.68, 0);
+  lLeg.rotation.z = Math.PI * 0.1;
+  omegaG.add(lLeg);
+
+  // Right descending leg
+  const rLeg = cyl(0.075, 0.075, 0.52, 14, gold2Mat);
+  rLeg.position.set(0.52, -0.68, 0);
+  rLeg.rotation.z = -Math.PI * 0.1;
+  omegaG.add(rLeg);
+
+  // Left foot bar
+  const lFoot = cyl(0.075, 0.075, 0.32, 12, goldMat);
+  lFoot.rotation.z = Math.PI / 2;
+  lFoot.position.set(-0.58, -0.92, 0);
+  omegaG.add(lFoot);
+
+  // Right foot bar
+  const rFoot = cyl(0.075, 0.075, 0.32, 12, goldMat);
+  rFoot.rotation.z = Math.PI / 2;
+  rFoot.position.set(0.58, -0.92, 0);
+  omegaG.add(rFoot);
+
+  // Foot end caps
+  [-0.74, 0.74].forEach(x => {
+    const cap = sph(0.09, goldMat);
+    cap.position.set(x, -0.92, 0);
+    omegaG.add(cap);
+  });
+
+  omegaG.position.set(0, 0.28, 0);
+  omegaG.scale.set(0.95, 0.95, 0.95);
+  master.add(omegaG);
+
+  // ══════════════════════════════════
+  // Ψ  PSI — center-bottom
+  // ══════════════════════════════════
+  const psiG = new THREE.Group();
 
   // Vertical staff
-  const staff = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.065, 0.065, 1.5, 12),
-    purpleMat
-  );
-  psiGroup.add(staff);
+  const pStaff = cyl(0.062, 0.062, 1.3, 14, purpleMat);
+  psiG.add(pStaff);
 
-  // Center arc
-  const psiArc = makeArc(0.35, 0.065, Math.PI, 32, purpleMat);
-  psiArc.rotation.z = Math.PI / 2;
-  psiArc.position.set(0, 0.18, 0);
-  psiGroup.add(psiArc);
+  // Center fork arc (opens upward)
+  const pArc = arc(0.32, 0.062, Math.PI, 36, darkPurpleMat);
+  pArc.rotation.z = Math.PI / 2;
+  pArc.position.set(0, 0.22, 0);
+  psiG.add(pArc);
 
-  // Left arm
-  const leftArm = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.055, 0.055, 0.65, 12),
-    purpleMat
-  );
-  leftArm.rotation.z = Math.PI * 0.28;
-  leftArm.position.set(-0.22, 0.08, 0);
-  psiGroup.add(leftArm);
+  // Left curved arm
+  const pLA = arc(0.28, 0.055, Math.PI * 0.55, 24, purpleMat);
+  pLA.rotation.z = Math.PI * 1.08;
+  pLA.position.set(-0.19, 0.12, 0);
+  psiG.add(pLA);
 
-  // Right arm
-  const rightArm = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.055, 0.055, 0.65, 12),
-    purpleMat
-  );
-  rightArm.rotation.z = -Math.PI * 0.28;
-  rightArm.position.set(0.22, 0.08, 0);
-  psiGroup.add(rightArm);
+  // Right curved arm
+  const pRA = arc(0.28, 0.055, Math.PI * 0.55, 24, purpleMat);
+  pRA.rotation.z = Math.PI * 0.43;
+  pRA.position.set(0.19, 0.12, 0);
+  psiG.add(pRA);
 
-  psiGroup.position.set(0, -0.85, 0.04);
-  psiGroup.scale.set(0.72, 0.72, 0.72);
-  group.add(psiGroup);
+  // Staff caps
+  const topCap = sph(0.09, darkPurpleMat);
+  topCap.position.set(0, 0.65, 0);
+  psiG.add(topCap);
+  const botCap = sph(0.075, darkPurpleMat);
+  botCap.position.set(0, -0.65, 0);
+  psiG.add(botCap);
 
-  // ── PHI (Φ) symbol ring ──
-  const phiGroup = new THREE.Group();
+  psiG.position.set(0, -0.78, 0.05);
+  psiG.scale.set(0.78, 0.78, 0.78);
+  master.add(psiG);
 
-  // Outer ring
-  const outerRing = new THREE.Mesh(
-    new THREE.TorusGeometry(1.55, 0.065, 16, 80),
-    new THREE.MeshStandardMaterial({ color: 0xFFD700, metalness: 0.9, roughness: 0.1, emissive: 0x2A1000, emissiveIntensity: 0.3 })
-  );
-  phiGroup.add(outerRing);
-
-  // Inner decorative ring
-  const innerRing = new THREE.Mesh(
-    new THREE.TorusGeometry(1.35, 0.03, 12, 80),
-    new THREE.MeshStandardMaterial({ color: 0x9B30FF, metalness: 0.7, roughness: 0.2, emissive: 0x1A0035, emissiveIntensity: 0.5 })
-  );
-  phiGroup.add(innerRing);
-
-  group.add(phiGroup);
-
-  // ── Floating particles ──
-  const particleGeo = new THREE.BufferGeometry();
-  const pCount = 120;
-  const pPos = new Float32Array(pCount * 3);
-  for (let i = 0; i < pCount * 3; i++) {
-    pPos[i] = (Math.random() - 0.5) * 5;
-  }
-  particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const particleMat = new THREE.PointsMaterial({
-    color: 0xFFD700,
-    size: 0.025,
-    transparent: true,
-    opacity: 0.6
+  // ══════════════════════════════════
+  // Glowing center gem
+  // ══════════════════════════════════
+  const gemMat = new THREE.MeshStandardMaterial({
+    color: 0x9B30FF, metalness: 0.5, roughness: 0,
+    emissive: 0x6600CC, emissiveIntensity: 1.2, transparent: true, opacity: 0.9
   });
-  const particles = new THREE.Points(particleGeo, particleMat);
-  scene.add(particles);
+  const gem = sph(0.12, gemMat);
+  gem.position.set(0, -0.05, 0.1);
+  master.add(gem);
 
-  // Animation
+  // Gem glow halo
+  const haloMat = new THREE.MeshStandardMaterial({
+    color: 0xFFD700, emissive: 0xFFD700, emissiveIntensity: 0.8,
+    transparent: true, opacity: 0.15
+  });
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), haloMat);
+  halo.position.copy(gem.position);
+  master.add(halo);
+
+  // ══════════════════════════════════
+  // Orbiting particles — gold & purple
+  // ══════════════════════════════════
+  const orbGroup = new THREE.Group();
+  scene.add(orbGroup);
+
+  const orbData = [];
+  const orbColors = [0xFFD700, 0xFFD700, 0x9B30FF, 0xFFAA00, 0xCC44FF];
+  for (let i = 0; i < 18; i++) {
+    const mat = new THREE.MeshStandardMaterial({
+      color: orbColors[i % orbColors.length],
+      emissive: orbColors[i % orbColors.length],
+      emissiveIntensity: 1.5
+    });
+    const p = sph(i % 3 === 0 ? 0.06 : 0.04, mat);
+    const radius = 1.95 + (Math.random() - 0.5) * 0.3;
+    const speed = 0.4 + Math.random() * 0.4;
+    const phase = (i / 18) * Math.PI * 2;
+    const tilt = (Math.random() - 0.5) * 0.8;
+    orbData.push({ mesh: p, radius, speed, phase, tilt });
+    orbGroup.add(p);
+  }
+
+  // ══════════════════════════════════
+  // Background star field
+  // ══════════════════════════════════
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 200;
+  const starPos = new Float32Array(starCount * 3);
+  for (let i = 0; i < starCount * 3; i++) {
+    starPos[i] = (Math.random() - 0.5) * 12;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+  const starMat = new THREE.PointsMaterial({ color: 0xFFD700, size: 0.018, transparent: true, opacity: 0.5 });
+  scene.add(new THREE.Points(starGeo, starMat));
+
+  // ══════════════════════════════════
+  // ANIMATION — full continuous spin
+  // ══════════════════════════════════
   let t = 0;
   function animate() {
     requestAnimationFrame(animate);
-    t += 0.008;
+    t += 0.012;
 
-    // Slow majestic rotation
-    group.rotation.y = t * 0.4;
-    group.rotation.x = Math.sin(t * 0.3) * 0.15;
+    // Continuous Y-axis spin (full 360 forever)
+    master.rotation.y = t * 1.1;
+    // Gentle X wobble for 3D depth effect
+    master.rotation.x = Math.sin(t * 0.4) * 0.18;
+    // Z tilt breathe
+    master.rotation.z = Math.sin(t * 0.25) * 0.06;
 
-    // Gentle float
-    group.position.y = Math.sin(t * 0.6) * 0.08;
+    // Float up and down
+    master.position.y = Math.sin(t * 0.7) * 0.1;
 
-    // Gold light orbit
-    gold_light.position.x = Math.cos(t * 0.7) * 3;
-    gold_light.position.y = Math.sin(t * 0.5) * 2;
+    // Shield ring counter-spins slightly for visual drama
+    shieldRing.rotation.z = t * 0.15;
 
-    // Particles slow rotate
-    particles.rotation.y = t * 0.05;
+    // Gem pulse
+    const pulse = 0.9 + Math.sin(t * 2.5) * 0.1;
+    gem.scale.set(pulse, pulse, pulse);
+    halo.scale.set(pulse * 1.3, pulse * 1.3, pulse * 1.3);
+
+    // Orbiting particles
+    orbData.forEach(o => {
+      const angle = t * o.speed + o.phase;
+      o.mesh.position.x = Math.cos(angle) * o.radius;
+      o.mesh.position.y = Math.sin(angle * 0.6 + o.tilt) * 0.5;
+      o.mesh.position.z = Math.sin(angle) * o.radius * 0.6;
+    });
+
+    // Orbit lights
+    goldKey.position.x = Math.cos(t * 0.5) * 4;
+    goldKey.position.z = Math.sin(t * 0.5) * 4;
+    purpleFill.position.x = Math.cos(t * 0.3 + Math.PI) * 3.5;
+    purpleFill.position.z = Math.sin(t * 0.3 + Math.PI) * 3.5;
 
     renderer.render(scene, camera);
   }
